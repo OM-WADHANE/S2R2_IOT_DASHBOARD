@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finished Products - S2R2 IoT Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            transition: all 0.3s;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 50;
+                left: -100%;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="flex justify-between items-center p-4">
+            <div class="flex items-center space-x-4">
+                <button id="menuToggle" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-xl font-bold">S2R2 IoT.Manager</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://placehold.co/40x40" alt="User" class="w-8 h-8 rounded-full cursor-pointer">
+                    <span class="hidden md:inline" id="username">Admin</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="sidebar bg-white w-64 min-h-screen p-4 border-r shadow-sm">
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-semibold">Navigation</h2>
+                    <button id="closeSidebar" class="md:hidden text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <nav>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="index.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-tachometer-alt mr-3"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="raw-materials.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-truck mr-3"></i>
+                                Raw Materials
+                            </a>
+                        </li>
+                        <li>
+                            <a href="finished-products.html" class="flex items-center p-3 rounded-lg bg-blue-50 text-blue-600">
+                                <i class="fas fa-cube mr-3"></i>
+                                Finished Products
+                            </a>
+                        </li>
+                        <li>
+                            <a href="client-base.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-users mr-3"></i>
+                                Client Base
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Finished Products</h2>
+                <p class="text-gray-600">Complete catalog of manufactured products</p>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="flex-1">
+                        <div class="relative">
+                            <input id="searchInput" type="text" placeholder="Search products..." 
+                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <select id="typeFilter" class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Types</option>
+                            <option value="Sensor">Sensor</option>
+                            <option value="Actuator">Actuator</option>
+                            <option value="Controller">Controller</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="qualityFilter" class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Quality</option>
+                            <option value="passed">Passed</option>
+                            <option value="testing">Testing</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="productsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Products will be loaded here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-12">
+                <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500 text-lg">No products found</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample finished products data
+        const finishedProducts = [
+            {
+                id: 1,
+                name: 'Temperature Sensor Unit',
+                type: 'Sensor',
+                serial_number: 'TS-2023-06-001',
+                batch_number: 'TS-2023-06',
+                manufacturing_date: '2023-06-15',
+                quality_status: 'passed',
+                status: 'active',
+                location: 'Production Floor',
+                specifications: {
+                    range: '-55°C to +125°C',
+                    interface: 'I2C',
+                    accuracy: '±0.5°C'
+                },
+                price: 1200,
+                stock: 45
+            },
+            {
+                id: 2,
+                name: 'Smart Lighting Unit',
+                type: 'Actuator',
+                serial_number: 'SLU-2023-05-001',
+                batch_number: 'SLU-2023-05',
+                manufacturing_date: '2023-05-20',
+                quality_status: 'passed',
+                status: 'active',
+                location: 'Production Floor',
+                specifications: {
+                    brightness: '1000lm',
+                    protocol: 'WiFi',
+                    power: '12W'
+                },
+                price: 2500,
+                stock: 32
+            },
+            {
+                id: 3,
+                name: 'Access Control Unit',
+                type: 'Controller',
+                serial_number: 'ACU-2023-07-001',
+                batch_number: 'ACU-2023-07',
+                manufacturing_date: '2023-07-01',
+                quality_status: 'testing',
+                status: 'active',
+                location: 'Testing Lab',
+                specifications: {
+                    capacity: '1000 cards',
+                    interface: 'RFID',
+                    protocol: 'TCP/IP'
+                },
+                price: 8500,
+                stock: 12
+            },
+            {
+                id: 4,
+                name: 'Surveillance Camera',
+                type: 'Sensor',
+                serial_number: 'SC-2023-04-001',
+                batch_number: 'SC-2023-04',
+                manufacturing_date: '2023-04-10',
+                quality_status: 'passed',
+                status: 'active',
+                location: 'Production Floor',
+                specifications: {
+                    resolution: '1080p',
+                    night_vision: true,
+                    storage: 'Cloud'
+                },
+                price: 4500,
+                stock: 28
+            },
+            {
+                id: 5,
+                name: 'Motion Sensor Pro',
+                type: 'Sensor',
+                serial_number: 'MS-2024-01-015',
+                batch_number: 'MS-2024-01',
+                manufacturing_date: '2024-01-15',
+                quality_status: 'passed',
+                status: 'active',
+                location: 'Warehouse B',
+                specifications: {
+                    range: '10m',
+                    angle: '120°',
+                    protocol: 'Zigbee'
+                },
+                price: 850,
+                stock: 67
+            },
+            {
+                id: 6,
+                name: 'Smart Relay Module',
+                type: 'Actuator',
+                serial_number: 'SRM-2024-02-008',
+                batch_number: 'SRM-2024-02',
+                manufacturing_date: '2024-02-08',
+                quality_status: 'passed',
+                status: 'active',
+                location: 'Production Floor',
+                specifications: {
+                    channels: '8',
+                    voltage: '5V DC',
+                    current: '10A per channel'
+                },
+                price: 1800,
+                stock: 41
+            }
+        ];
+
+        let filteredProducts = [...finishedProducts];
+
+        function getQualityBadge(status) {
+            const badges = {
+                'passed': '<span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full"><i class="fas fa-check-circle mr-1"></i>Passed</span>',
+                'testing': '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full"><i class="fas fa-hourglass-half mr-1"></i>Testing</span>',
+                'failed': '<span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-semibold rounded-full"><i class="fas fa-times-circle mr-1"></i>Failed</span>'
+            };
+            return badges[status] || '';
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                'Sensor': 'fa-satellite-dish',
+                'Actuator': 'fa-bolt',
+                'Controller': 'fa-microchip'
+            };
+            return icons[type] || 'fa-cube';
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filteredProducts.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filteredProducts.map(product => `
+                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <i class="fas ${getTypeIcon(product.type)} text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800">${product.name}</h3>
+                                <p class="text-sm text-gray-500">${product.type}</p>
+                            </div>
+                        </div>
+                        ${getQualityBadge(product.quality_status)}
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <p class="text-gray-500">Serial Number</p>
+                                <p class="font-semibold">${product.serial_number}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Batch</p>
+                                <p class="font-semibold">${product.batch_number}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="text-xs text-gray-500 mb-2">Specifications:</p>
+                        <div class="space-y-1">
+                            ${Object.entries(product.specifications).map(([key, value]) => `
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-gray-600">${key}:</span>
+                                    <span class="font-semibold">${value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-xs text-gray-500">Stock</p>
+                            <p class="font-bold text-blue-600">${product.stock} units</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Location</p>
+                            <p class="font-semibold text-sm">${product.location}</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-500">Unit Price</p>
+                            <p class="font-bold text-green-600 text-lg">₹${product.price.toLocaleString()}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-500">Mfg Date</p>
+                            <p class="text-xs font-semibold">${product.manufacturing_date}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex gap-2">
+                        <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </button>
+                        <button class="px-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition text-sm">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="px-4 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition text-sm">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const type = document.getElementById('typeFilter').value;
+            const quality = document.getElementById('qualityFilter').value;
+
+            filteredProducts = finishedProducts.filter(product => {
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+                                    product.serial_number.toLowerCase().includes(searchTerm) ||
+                                    product.type.toLowerCase().includes(searchTerm);
+                
+                const matchesType = !type || product.type === type;
+                const matchesQuality = !quality || product.quality_status === quality;
+
+                return matchesSearch && matchesType && matchesQuality;
+            });
+
+            renderProducts();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('typeFilter').addEventListener('change', applyFilters);
+        document.getElementById('qualityFilter').addEventListener('change', applyFilters);
+
+        // Sidebar toggle
+        document.getElementById('menuToggle')?.addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+        document.getElementById('closeSidebar')?.addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.remove('active');
+        });
+
+        // Login protection
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = '/login';
+        }
+
+        const username = localStorage.getItem('username') || 'User';
+        document.getElementById('username').textContent = username.charAt(0).toUpperCase() + username.slice(1);
+
+        // Logout
+        document.querySelector('img[alt="User"]').parentElement.addEventListener('click', function() {
+            if (confirm('Do you want to logout?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('username');
+                window.location.href = '/login';
+            }
+        });
+
+        // Initial render
+        renderProducts();
+    </script>
+</body>
+</html>

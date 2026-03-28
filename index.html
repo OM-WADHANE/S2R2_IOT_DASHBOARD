@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Inventory Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            transition: all 0.3s;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 50;
+                left: -100%;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="flex justify-between items-center p-4">
+            <div class="flex items-center space-x-4">
+                <button id="menuToggle" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-xl font-bold">S2R2 IoT.Manager</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://placehold.co/40x40" alt="User profile picture" class="w-8 h-8 rounded-full">
+                    <span class="hidden md:inline">Admin </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row">
+        <aside class="sidebar bg-white w-64 min-h-screen p-4 border-r shadow-sm">
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-semibold">Navigation</h2>
+                    <button id="closeSidebar" class="md:hidden text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <nav>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="index.html" class="flex items-center p-3 rounded-lg bg-blue-50 text-blue-600">
+                                <i class="fas fa-tachometer-alt mr-3"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="raw-materials.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-truck mr-3"></i>
+                                Raw Materials
+                            </a>
+                        </li>
+                        <li>
+                            <a href="finished-products.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-cube mr-3"></i>
+                                Finished Products
+                            </a>
+                        </li>
+                        <li>
+                            <a href="client-base.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-users mr-3"></i>
+                                Client Base
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            
+            <div class="mt-auto pt-4 border-t">
+                <div class="flex items-center p-3 rounded-lg bg-gray-100">
+                    </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-6">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
+                <p class="text-gray-600">Manage your IoT devices and inventory</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Devices</p>
+                            <h3 class="text-2xl font-bold mt-1">1,248</h3>
+                            <p class="text-green-500 text-xs mt-2 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                5.2% from last month
+                            </p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <i class="fas fa-microchip text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Raw Materials</p>
+                            <h3 class="text-2xl font-bold mt-1">756</h3>
+                            <p class="text-red-500 text-xs mt-2 flex items-center">
+                                <i class="fas fa-arrow-down mr-1"></i>
+                                2.1% from last month
+                            </p>
+                        </div>
+                        <div class="bg-orange-100 p-3 rounded-lg">
+                            <i class="fas fa-truck text-orange-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Finished Products</p>
+                            <h3 class="text-2xl font-bold mt-1">492</h3>
+                            <p class="text-green-500 text-xs mt-2 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                8.7% from last month
+                            </p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-lg">
+                            <i class="fas fa-cube text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover transition-all">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Critical Alerts</p>
+                            <h3 class="text-2xl font-bold mt-1">12</h3>
+                            <p class="text-red-500 text-xs mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                3 need immediate attention
+                            </p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-1 bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold text-lg">Raw Materials</h3>
+                        <div class="flex items-center gap-2">
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">
+                                <i class="fas fa-plus mr-1"></i> Add New
+                            </button>
+                            <button id="exportRawBtn" class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition">
+                                <i class="fas fa-file-excel mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Search materials..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-box text-purple-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">PLC Controller</h4>
+                                <p class="text-xs text-gray-500">Quan: 48</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">In Stock</span>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-bolt text-yellow-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">RFID Antenna</h4>
+                                <p class="text-xs text-gray-500">Quan: 12</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">Low Stock</span>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-microchip text-blue-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">ESP32 Module</h4>
+                                <p class="text-xs text-gray-500">Quan: 87</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">In Stock</span>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-plug text-red-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">Power Supply</h4>
+                                <p class="text-xs text-gray-500">Quan: 5</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">Reorder</span>
+                        </div>
+                    </div>
+                    
+                    <a href="raw-materials.html" class="block w-full mt-4 text-blue-600 text-sm font-medium hover:text-blue-800 transition text-center">
+                        View All Materials <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <div class="lg:col-span-1 bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold text-lg">Finished Products</h3>
+                        <div class="flex items-center gap-2">
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">
+                                <i class="fas fa-plus mr-1"></i> Add New
+                            </button>
+                            <button id="exportProductBtn" class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition">
+                                <i class="fas fa-file-excel mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Search products..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-thermometer-half text-indigo-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">Temperature Sensor</h4>
+                                <p class="text-xs text-gray-500">Batch: TS-2023-06</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Active</span>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-lightbulb text-teal-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">Smart Lighting Unit</h4>
+                                <p class="text-xs text-gray-500">Batch: SLU-2023-05</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Active</span>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-door-open text-purple-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">Access Control Unit</h4>
+                                <p class="text-xs text-gray-500">Batch: ACU-2023-07</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">Testing</span>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-eye text-pink-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium text-sm">Surveillance Camera</h4>
+                                <p class="text-xs text-gray-500">Batch: SC-2023-04</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Active</span>
+                        </div>
+                    </div>
+                    
+                    <a href="finished-products.html" class="block w-full mt-4 text-blue-600 text-sm font-medium hover:text-blue-800 transition text-center">
+                        View All Products <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <div class="lg:col-span-1 bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold text-lg">Recent Activity</h3>
+                        <button class="text-gray-500 hover:text-gray-700 transition">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-plus text-blue-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">New raw material added</p>
+                                <p class="text-xs text-gray-500">PLC Controller x 12 · 2 hours ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Finished product quality check passed</p>
+                                <p class="text-xs text-gray-500">Access Control Unit · 5 hours ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-truck text-orange-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Raw material shipment received</p>
+                                <p class="text-xs text-gray-500">RFID Antenna x 50 · Yesterday</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-exclamation text-red-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Low inventory alert</p>
+                                <p class="text-xs text-gray-500">Power Supply · Yesterday</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-box text-purple-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">New finished product registered</p>
+                                <p class="text-xs text-gray-500">Surveillance Camera · 2 days ago</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full mt-4 text-blue-600 text-sm font-medium hover:text-blue-800 transition">
+                        View All Activity
+                    </button>
+                </div>
+            </div>
+
+            <div id="addRawModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">Add Raw Material</h3>
+                        <button id="closeRawModal" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Material Name</label>
+                            <input type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                            <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>Electronics</option>
+                                <option>Mechanical</option>
+                                <option>Sensors</option>
+                                <option>Network</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                                <input type="number" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                                <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>pcs</option>
+                                    <option>kg</option>
+                                    <option>m</option>
+                                    <option>l</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+                            <input type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>Warehouse A</option>
+                                <option>Warehouse B</option>
+                                <option>Production Floor</option>
+                                <option>Testing Lab</option>
+                            </select>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                                Add Material
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="addProductModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">Add Finished Product</h3>
+                        <button id="closeProductModal" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                            <input type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Product Type</label>
+                            <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>Sensor</option>
+                                <option>Controller</option>
+                                <option>Gateway</option>
+                                <option>Actuator</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Serial Number</label>
+                            <input type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Batch Number</label>
+                            <input type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Manufacturing Date</label>
+                            <input type="date" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>Active</option>
+                                <option>Testing</option>
+                                <option>Maintenance</option>
+                                <option>Retired</option>
+                            </select>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                                Add Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // --- Script for Sidebar, Modals, and Excel Export ---
+
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.add('active');
+        });
+
+        document.getElementById('closeSidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.remove('active');
+        });
+
+        // Add Raw Material Modal
+        document.querySelector('.lg\\:col-span-1:nth-child(1) button:not(#exportRawBtn)').addEventListener('click', function() {
+            document.getElementById('addRawModal').classList.remove('hidden');
+        });
+        document.getElementById('closeRawModal').addEventListener('click', function() {
+            document.getElementById('addRawModal').classList.add('hidden');
+        });
+
+        // Add Finished Product Modal
+        document.querySelector('.lg\\:col-span-1:nth-child(2) button:not(#exportProductBtn)').addEventListener('click', function() {
+            document.getElementById('addProductModal').classList.remove('hidden');
+        });
+        document.getElementById('closeProductModal').addEventListener('click', function() {
+            document.getElementById('addProductModal').classList.add('hidden');
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.id === 'addRawModal') {
+                document.getElementById('addRawModal').classList.add('hidden');
+            }
+            if (event.target.id === 'addProductModal') {
+                document.getElementById('addProductModal').classList.add('hidden');
+            }
+        });
+
+        // --- SCRIPT FOR EXCEL EXPORT ---
+
+        // Function to export Raw Materials
+        function exportRawMaterialsToExcel() {
+            // 1. Get all the raw material item elements from the correct section
+            const items = document.querySelectorAll('.lg\\:col-span-1:nth-child(1) .space-y-3 > div');
+            
+            // 2. Extract data from each item into an array of objects
+            const data = Array.from(items).map(item => {
+                const name = item.querySelector('h4').innerText;
+                const quantity = item.querySelector('p').innerText.replace('Quan: ', '');
+                const status = item.querySelector('span').innerText;
+                
+                return {
+                    "Material Name": name,
+                    "Quantity": parseInt(quantity), // Convert quantity to a number
+                    "Stock Status": status
+                };
+            });
+
+            // 3. Use SheetJS to create and download the Excel file
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Raw Materials");
+            XLSX.writeFile(workbook, "RawMaterialsInventory.xlsx");
+        }
+
+        // Function to export Finished Products
+        function exportFinishedProductsToExcel() {
+            // 1. Get all the finished product item elements from the correct section
+            const items = document.querySelectorAll('.lg\\:col-span-1:nth-child(2) .space-y-3 > div');
+            
+            // 2. Extract data from each item
+            const data = Array.from(items).map(item => {
+                const name = item.querySelector('h4').innerText;
+                const batch = item.querySelector('p').innerText.replace('Batch: ', '');
+                const status = item.querySelector('span').innerText;
+                
+                return {
+                    "Product Name": name,
+                    "Batch Number": batch,
+                    "Status": status
+                };
+            });
+            
+            // 3. Create and download the Excel file
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Finished Products");
+            XLSX.writeFile(workbook, "FinishedProductsInventory.xlsx");
+        }
+
+        // 4. Attach the functions to the buttons' click events
+        document.getElementById('exportRawBtn').addEventListener('click', exportRawMaterialsToExcel);
+        document.getElementById('exportProductBtn').addEventListener('click', exportFinishedProductsToExcel);
+
+        // ============ LOGIN PROTECTION ============
+        // Check if user is logged in
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Display logged-in username
+        const username = localStorage.getItem('username') || 'User';
+        const userSpan = document.querySelector('header span.hidden');
+        if (userSpan) {
+            userSpan.textContent = username.charAt(0).toUpperCase() + username.slice(1);
+        }
+
+        // Add logout functionality
+        const userProfile = document.querySelector('header img[alt="User profile picture"]');
+        if (userProfile) {
+            userProfile.style.cursor = 'pointer';
+            userProfile.parentElement.style.cursor = 'pointer';
+            userProfile.parentElement.addEventListener('click', function() {
+                if (confirm('Do you want to logout?')) {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('loginTime');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

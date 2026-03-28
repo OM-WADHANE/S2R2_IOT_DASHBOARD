@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Base - S2R2 IoT.Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            transition: all 0.3s;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 50;
+                left: -100%;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="flex justify-between items-center p-4">
+            <div class="flex items-center space-x-4">
+                <button id="menuToggle" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-xl font-bold">S2R2 IoT.Manager</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row">
+        <aside class="sidebar bg-white w-64 min-h-screen p-4 border-r shadow-sm">
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-semibold">Navigation</h2>
+                    <button id="closeSidebar" class="md:hidden text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <nav>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="index.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-tachometer-alt mr-3"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="raw-materials.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-truck mr-3"></i>
+                                Raw Materials
+                            </a>
+                        </li>
+                        <li>
+                            <a href="finished-products.html" class="flex items-center p-3 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-cube mr-3"></i>
+                                Finished Products
+                            </a>
+                        </li>
+                        <li>
+                            <a href="client-base.html" class="flex items-center p-3 rounded-lg bg-blue-50 text-blue-600">
+                                <i class="fas fa-users mr-3"></i>
+                                Client Base
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-6">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Client Base</h2>
+                <p class="text-gray-600">Manage your clients and export/import them with Excel</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                    <div class="flex items-center gap-3">
+                        <button id="addClientBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition flex items-center gap-2">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Add Client</span>
+                        </button>
+                        <button id="exportClientsBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition flex items-center gap-2">
+                            <i class="fas fa-file-excel"></i>
+                            <span>Export Excel</span>
+                        </button>
+                        <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-gray-600">
+                            <i class="fas fa-file-import text-blue-500"></i>
+                            <span>Import Excel</span>
+                            <input id="importClientsInput" type="file" accept=".xlsx,.xls" class="hidden">
+                        </label>
+                    </div>
+                    <div class="w-full md:w-64">
+                        <div class="relative">
+                            <input id="clientSearch" type="text" placeholder="Search clients..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No.</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Area</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <p id="clientsEmptyState" class="text-center text-gray-500 text-sm mt-4 hidden">
+                    No clients yet. Use "Add Client" or import from Excel.
+                </p>
+            </div>
+
+            <div id="addClientModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">Add Client</h3>
+                        <button id="closeClientModal" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form id="addClientForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
+                            <input id="clientNameInput" type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Area</label>
+                            <input id="clientAreaInput" type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Contact Person</label>
+                            <input id="clientContactInput" type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input id="clientEmailInput" type="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                            <input id="clientPhoneInput" type="text" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                                Save Client
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // Sidebar toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.add('active');
+        });
+
+        document.getElementById('closeSidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.remove('active');
+        });
+
+        // In-memory client list (no server / no DB)
+        // Client data extracted from Excel - Customer List -12-09-25.xlsx
+        window.CLIENTS = [
+          {"name": "Tata Motors", "area": "Chinchwad", "contact_person": "Swapnil Gadappa", "email": "SSG793525@tatamotors.com", "phone": "8550937272"},
+          {"name": "", "area": "", "contact_person": "Sunil Bhambure", "email": "sunil.bhambure@tatamotors.com", "phone": "8149097345"},
+          {"name": "", "area": "", "contact_person": "Manoj Cherian", "email": "manoj.cherian@tatamotors.com", "phone": "8378976524"},
+          {"name": "", "area": "", "contact_person": "Balasaheb Landage", "email": "balasaheb.landge@tatamotors.com", "phone": "7276093944"},
+          {"name": "", "area": "", "contact_person": "Nitesh Tiwari", "email": "ntt793095@tatamotors.com", "phone": "8871844829"},
+          {"name": "", "area": "", "contact_person": "Shubham Patil", "email": "SAP793269@tatamotors.com", "phone": "7841894735"},
+          {"name": "", "area": "", "contact_person": "Vinay Pandey", "email": "Vinay.Pandey@tatamotors.com", "phone": "9607984524"},
+          {"name": "", "area": "", "contact_person": "Rajul Mathur", "email": "rajul.mathur@tatamotors.com", "phone": "7276091075"},
+          {"name": "", "area": "", "contact_person": "Manoj Nathan", "email": "MNN741583@tatamotors.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Ankit Desai", "email": "ankit.desai@tatamotors.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Rushabh Shinde", "email": "Rushabh.Shinde@tatamotors.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Prasad Puranik", "email": "prasad.puranik@tatamotors.com", "phone": ""},
+          {"name": "Shirodkar Preci Comp", "area": "Chinchwad", "contact_person": "Adinath Sonawane", "email": "adinath.sonawane@spcindia.com", "phone": "8956311247"},
+          {"name": "Ask Engineers", "area": "Bhosari", "contact_person": "Ajay Hegade", "email": "ajay.hegade@askgroupindia.com", "phone": "9689999900"},
+          {"name": "Efficient Precision & System Pvt.Ltd.", "area": "Pune", "contact_person": "Pradeep B. Gadekar", "email": "epsplefficient@gmail.com", "phone": "9850899930"},
+          {"name": "Calibit Systems Pvt. Ltd.", "area": "Pune", "contact_person": "Neeraj Bannore", "email": "neeraj.bannore@calibitsystems.com", "phone": "9850959575"},
+          {"name": "Sei Numero Nirman Pvt.Ltd.", "area": "Shindewadi", "contact_person": "Tushar Mengale", "email": "tcm@seinumero.net", "phone": "9850429000"},
+          {"name": "Valmet Technologies Pvt.Ltd.", "area": "Fulgaon", "contact_person": "Dinesh Shirsat", "email": "dinesh.shirsat@valmet.com", "phone": "9579921702"},
+          {"name": "Prescient Technologies", "area": "Baner", "contact_person": "Vivek Bukke", "email": "vivekb@pre-scient.com", "phone": "8380017822"},
+          {"name": "Renishaw Metrology Systems Ltd", "area": "Pune", "contact_person": "Chandrashekhar", "email": "cs154602@renishaw.com", "phone": ""},
+          {"name": "Paranjape Auto Cast Pvt Ltd", "area": "Shirwal", "contact_person": "S D Karanke", "email": "sdkaranke@paranjapeautocast.com", "phone": "9767107414"},
+          {"name": "Viyoma Manufacturing Pvt. Ltd.", "area": "Tamilnadu", "contact_person": "Meera Ravi", "email": "meera@viyoma.in", "phone": "9042915671"},
+          {"name": "KBL", "area": "Kirloskar Wadi", "contact_person": "Nikhil Nirukhekar", "email": "nikhil.nirukhekar@kbl.co.in", "phone": "9209061184"},
+          {"name": "", "area": "", "contact_person": "Sujit Kabure", "email": "sujit.kabure@kbl.co.in", "phone": ""},
+          {"name": "IcSoft", "area": "Bengaluru", "contact_person": "Narendran G", "email": "narendran.g@icsoft.co.in", "phone": "9886000738"},
+          {"name": "ACTIn", "area": "Pune", "contact_person": "Swapnil Waghmale", "email": "swapnil.waghmale@actin.co.in", "phone": "9552032900"},
+          {"name": "Eagle Burgmann", "area": "Hadapsar", "contact_person": "Apoorva Dongaonkar", "email": "Apoorva.Dongaonkar@in.eagleburgmann.com", "phone": "9766571150"},
+          {"name": "", "area": "", "contact_person": "Inder Singh", "email": "Singh.Inder@in.eagleburgmann.com", "phone": ""},
+          {"name": "Sansera Engineering Limited Plant-7", "area": "Bengaluru", "contact_person": "Ranjith BS", "email": "ranjith_bs@sansera.in", "phone": "7795093423"},
+          {"name": "Sansera Engineering Limited", "area": "Pune", "contact_person": "Altap Husen", "email": "altaphusen_mujawar@sansera.in", "phone": "7387056042"},
+          {"name": "", "area": "", "contact_person": "Saidas Shinde", "email": "saidas_shinde@sansera.in", "phone": "8171458484"},
+          {"name": "Trimasys Control Solutions Pvt. Ltd.", "area": "Bhosari", "contact_person": "Ashish Nilkhan", "email": "Ashish.Nilkhan@trimasyscontrol.com", "phone": "9028963547"},
+          {"name": "", "area": "", "contact_person": "Swapnil Kale", "email": "swapnil.kale@trimasyscontrol.com", "phone": ""},
+          {"name": "Mahabal Metals", "area": "Sangli", "contact_person": "Vinayak Lamdade", "email": "vinayak.lamdade@mahabal.in", "phone": "8087222185"},
+          {"name": "", "area": "", "contact_person": "Vidyadhar Ingale", "email": "vidyadhar.ingale@mahabal.in", "phone": "7030790606"},
+          {"name": "Jsons", "area": "Sangli", "contact_person": "Imran Pirzade", "email": "imran@maindflow.com , imran@jsonsfoundry.com", "phone": "9423688887"},
+          {"name": "Jinabakul Forge", "area": "Belgavi", "contact_person": "Sushant Todkar", "email": "sushant.todkar@jinabakul.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Virupax Sindagi", "email": "virupax.sindagi@jinabakul.com", "phone": "9880212517"},
+          {"name": "Arete Engineering Pvt Ltd", "area": "Bhosari", "contact_person": "Aditya Agarwal", "email": "aditya.ttu@gmail.com , areteengineering82@gmail.com", "phone": "9767101300"},
+          {"name": "Macpower CNC", "area": "Rajkot", "contact_person": "Chintan Vora", "email": "chintanvora@macpowercnc.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Vimal Talsania", "email": "ele@macpowercnc.com", "phone": ""},
+          {"name": "Autologic Industries", "area": "Delhi", "contact_person": "Naman Gulati", "email": "info@autologicindustries.com", "phone": "9999985012"},
+          {"name": "Sany Heavy Vehicles", "area": "Pune", "contact_person": "Ajay Pawar", "email": "ajay.pawar@sanygroup.com", "phone": "9011081130"},
+          {"name": "", "area": "", "contact_person": "Harish Bakal", "email": "harish.bakal@sanygroup.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Nishukant Sawarkar", "email": "nishukant.sawarkar@sanygroup.com", "phone": "7758990813"},
+          {"name": "Klassic Wheels Ltd", "area": "Ahmednagar", "contact_person": "R Choudaki", "email": "r.choudaki@klassicwheels.com", "phone": "9359195335"},
+          {"name": "Globewin Precise Products LLP", "area": "Ahmednagar", "contact_person": "Sanjeet Samantray", "email": "Sanjeet.samantray@globewinpp.com", "phone": "9075070814"},
+          {"name": "Rachana Infotech", "area": "Belgavi", "contact_person": "Satish Homkar", "email": "satish@rachanatech.in", "phone": "9164751264"},
+          {"name": "General Machine Tools", "area": "Yadrav", "contact_person": "Ravi Takawade", "email": "ravi.takawade@generalmachinetools.com", "phone": "9552549663"},
+          {"name": "", "area": "", "contact_person": "Suhas Deshpande", "email": "suhas@gmtcpl.com", "phone": ""},
+          {"name": "Kulkarni Engineers", "area": "Kothrud", "contact_person": "Vinod Chavan", "email": "kulkarni.engineers@gmail.com", "phone": "9890663971"},
+          {"name": "Kulkarni Transpower Pvt Ltd", "area": "Warje", "contact_person": "Milind Kulkarni", "email": "sales@ktppl.com", "phone": "9764444391"},
+          {"name": "SAJ Test Plant Pvt Ltd", "area": "Mundhawa", "contact_person": "Rujuta Jagtap", "email": "rujuta.jagtap@sajdyno.com", "phone": "9890994553"},
+          {"name": "Grind Master Machines Pvt Ltd", "area": "Aurangabad", "contact_person": "Sameer Kelkar", "email": "sameer.kelkar@grindmaster.co.in", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Mahesh Sahasrabudhe", "email": "mahesh.sahasrabudhe@grindmaster.co.in", "phone": "9049998312"},
+          {"name": "Ratnaparkhi Electronics Ind Pvt Ltd", "area": "Nashik", "contact_person": "Vivek Bharadwaj", "email": "vivek@ratnaparkhiedm.com", "phone": "9686668958"},
+          {"name": "CIE India", "area": "Chakan", "contact_person": "Rajan Wagh", "email": "wagh.rajan@cie-india.com", "phone": "9503999573"},
+          {"name": "Parc Robotic Systems Pvt Ltd", "area": "Chakan", "contact_person": "Prashant Patil", "email": "prashant.patil@parcrobotics.in", "phone": "8888850482"},
+          {"name": "Kalyani Transmission Technology", "area": "Khed", "contact_person": "Vasudeo Khot", "email": "Vasudeo.Khot@kalyanitransmissiontechnology.com", "phone": "8983025215"},
+          {"name": "SGD Tools India", "area": "Kolhapur", "contact_person": "Deepak Shelke", "email": "sales@sgdtools.com", "phone": "9658002121"},
+          {"name": "Tata Motors Ltd", "area": "Pimpari", "contact_person": "Rakesh Sarangi", "email": "rsarangi@tatamotors.com", "phone": "9234500974"},
+          {"name": "Benteler Automotive", "area": "Chakan", "contact_person": "Anup Rathi", "email": "anup.rathi@benteler.com", "phone": "9309998425"},
+          {"name": "Arm Welders Pvt Ltd", "area": "Bhosari", "contact_person": "Sanjay Patil", "email": "sanjay.patil@armwelders.com", "phone": "9822684248"},
+          {"name": "Divgi TorqTransfer Systems Ltd", "area": "Bhosari", "contact_person": "Nilesh Shukla", "email": "ndshukla@divgi-tts.com", "phone": "8600129484"},
+          {"name": "Jayashree Polymers Pvt Ltd", "area": "Chinchwad", "contact_person": "Murhari Bhalke", "email": "murhari.bhalke@jayashreepolymers.com", "phone": "8669901380"},
+          {"name": "Hoerbiger India", "area": "Sanaswadi", "contact_person": "Swapnil Mungase", "email": "swapnil.mungase@hoerbiger.com", "phone": "9156122253"},
+          {"name": "Boltmate Ventures LLP", "area": "Pune", "contact_person": "Madhusudan Bhardwaj", "email": "madhusudan.bharadwaj@boltmate.in", "phone": "9970057186"},
+          {"name": "Shanti Technocrats", "area": "Kolhapur", "contact_person": "Mahesh Ingawale", "email": "shantitechnokop@gmail.com", "phone": ""},
+          {"name": "Kalyani Technoforge Ltd", "area": "Ambethan", "contact_person": "Laxman Bendbhar", "email": "Laxman.Bendbhar@kalyanitechnoforge.com", "phone": "9096717067"},
+          {"name": "RSB Transmission India LTD", "area": "Sanaswadi", "contact_person": "Neeraj Bannore", "email": "neeraj.bannore@calibitsystems.com", "phone": "9850959575"},
+          {"name": "Pneutech Engineers", "area": "Bhosari", "contact_person": "Rajanikant Patki", "email": "rajnikant@pneutechengineers.com", "phone": "9823068098"},
+          {"name": "Tata Steel Limited", "area": "Yerwada", "contact_person": "Nitin Patil", "email": "nmpatil@tatasteel.com", "phone": "8334901919"},
+          {"name": "RVB SHORLUBE INDUSTRY PVT LTD", "area": "Kanpur", "contact_person": "Anshul Bhatia", "email": "anshubhatia@rvbshorlubes.com", "phone": "7678992444"},
+          {"name": "Micro Epsilon", "area": "Pune", "contact_person": "Pragnesh Mori", "email": "Pragnesh.Mori@micro-epsilon.in", "phone": "9168030555"},
+          {"name": "Accurate", "area": "Pune", "contact_person": "Dharmesh Gala", "email": "dharmesh.gala@accurateic.in", "phone": ""},
+          {"name": "Tata Ficosa", "area": "Pune", "contact_person": "Saurabh Dharmadhikari", "email": "saurabh.dharmadhikari@tataficosa.com", "phone": "8975422422"},
+          {"name": "", "area": "", "contact_person": "Sachin Tarali", "email": "sachin.tarali@tataficosa.com", "phone": "9970240924"},
+          {"name": "Valveworks India", "area": "Pune", "contact_person": "Vijay Patil", "email": "vpatil1@valveworks.in", "phone": "9623457919"},
+          {"name": "Cooper Corporation", "area": "Satara", "contact_person": "Shreyash Shah", "email": "shreyas.shah@coopercorp.in", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Mukund Mahadik", "email": "mukund.mahadik@coopercorp.in", "phone": ""},
+          {"name": "BRS Precision", "area": "Bengaluru", "contact_person": "Ramesh R", "email": "rameshr@brsprecision.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Sandeep Patil", "email": "brs.sandippatil@gmail.com", "phone": ""},
+          {"name": "Antolin India Pvt Ltd", "area": "Pune", "contact_person": "Ajay Apte", "email": "ajay.apte@antolin.com", "phone": "9823011274"},
+          {"name": "", "area": "", "contact_person": "Venkat Pugal", "email": "pugal.venkat@antolin.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Varagandam Sadanand", "email": "sadanand.varagandam@antolin.com", "phone": ""},
+          {"name": "Cybernetik", "area": "Pune", "contact_person": "Sarang Kanitkar", "email": "skanitkar@cybernetik.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Megha Mulik", "email": "mmulik@cybernetik.com", "phone": ""},
+          {"name": "JBM", "area": "Delhi", "contact_person": "Shivpratap Singh", "email": "shivpratap.singh@jbmgroup.com", "phone": ""},
+          {"name": "Shriram Pistons", "area": "Delhi", "contact_person": "Rohit Rajbhar", "email": "rohit.rajbhar@shrirampistons.com", "phone": ""},
+          {"name": "Cummins India", "area": "Phaltan", "contact_person": "Pradeep Manal", "email": "pradeep.manal@cummins.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Manoj Mohanty", "email": "manoj.mohanty@cummins.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Krishna K", "email": "krishna.k.m@cummins.com", "phone": ""},
+          {"name": "", "area": "", "contact_person": "Banerjee Biswa", "email": "biswarup.banerjee@cummins.com", "phone": ""},
+          {"name": "Monk Automation", "area": "Pune", "contact_person": "", "email": "marketing@monkautomation.com", "phone": ""},
+          {"name": "Kasturi / Shreeram Foundry", "area": "Kolhapur", "contact_person": "Rahul Mali", "email": "Rahul@zanvargroup.com", "phone": ""}
+        ];
+
+        const clientsTableBody = document.getElementById('clientsTableBody');
+        const clientsEmptyState = document.getElementById('clientsEmptyState');
+        const clientSearchInput = document.getElementById('clientSearch');
+        const exportClientsBtn = document.getElementById('exportClientsBtn');
+        const importClientsInput = document.getElementById('importClientsInput');
+        const addClientBtn = document.getElementById('addClientBtn');
+        const addClientModal = document.getElementById('addClientModal');
+        const closeClientModal = document.getElementById('closeClientModal');
+        const addClientForm = document.getElementById('addClientForm');
+
+        let allClients = window.CLIENTS.slice();
+
+        function showToast(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg text-sm z-50 ${
+                type === 'success'
+                    ? 'bg-green-500 text-white'
+                    : type === 'error'
+                    ? 'bg-red-500 text-white'
+                    : 'bg-blue-500 text-white'
+            }`;
+            div.textContent = message;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        function loadClients() {
+            // Just use in-memory data; no server / DB
+            allClients = window.CLIENTS.slice();
+            renderClients(allClients);
+        }
+
+        function renderClients(list) {
+            clientsTableBody.innerHTML = '';
+            if (!list || list.length === 0) {
+                clientsEmptyState.classList.remove('hidden');
+                return;
+            }
+            clientsEmptyState.classList.add('hidden');
+
+            list.forEach((c, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-sm text-gray-600 font-medium">${idx + 1}</td>
+                    <td class="px-4 py-3 text-sm text-gray-900">${c.name || ''}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${c.area || ''}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${c.contact_person || ''}</td>
+                    <td class="px-4 py-3 text-sm text-blue-600">${c.email || ''}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${c.phone || ''}</td>
+                `;
+                clientsTableBody.appendChild(tr);
+            });
+        }
+
+        clientSearchInput.addEventListener('input', () => {
+            const q = clientSearchInput.value.toLowerCase();
+            const filtered = allClients.filter((c) => {
+                return (
+                    (c.name || '').toLowerCase().includes(q) ||
+                    (c.area || '').toLowerCase().includes(q) ||
+                    (c.contact_person || '').toLowerCase().includes(q) ||
+                    (c.email || '').toLowerCase().includes(q) ||
+                    (c.phone || '').toLowerCase().includes(q)
+                );
+            });
+            renderClients(filtered);
+        });
+
+        // Add client modal
+        addClientBtn.addEventListener('click', () => {
+            addClientModal.classList.remove('hidden');
+        });
+        closeClientModal.addEventListener('click', () => {
+            addClientModal.classList.add('hidden');
+        });
+        window.addEventListener('click', (event) => {
+            if (event.target.id === 'addClientModal') {
+                addClientModal.classList.add('hidden');
+            }
+        });
+
+        addClientForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('clientNameInput').value;
+            const area = document.getElementById('clientAreaInput').value;
+            const contact_person = document.getElementById('clientContactInput').value;
+            const email = document.getElementById('clientEmailInput').value;
+            const phone = document.getElementById('clientPhoneInput').value;
+
+            const newClient = { name, area, contact_person, email, phone };
+            window.CLIENTS.push(newClient);
+            allClients = window.CLIENTS.slice();
+            renderClients(allClients);
+            addClientForm.reset();
+            addClientModal.classList.add('hidden');
+            showToast('Client added', 'success');
+        });
+
+        // Export clients to Excel
+        exportClientsBtn.addEventListener('click', () => {
+            if (!allClients || allClients.length === 0) {
+                showToast('No clients to export', 'info');
+                return;
+            }
+            const data = allClients.map((c, idx) => ({
+                'No.': idx + 1,
+                'Client Name': c.name || '',
+                'Area': c.area || '',
+                'Contact Person': c.contact_person || '',
+                'Email': c.email || '',
+                'Phone': c.phone || ''
+            }));
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Clients');
+            XLSX.writeFile(workbook, 'Clients.xlsx');
+        });
+
+        // Helper function to find field value from row using multiple possible column names
+        function findField(row, possibleNames) {
+            if (!row) return '';
+            for (const name of possibleNames) {
+                // Try exact match first
+                if (row[name] !== undefined && row[name] !== null && String(row[name]).trim() !== '') {
+                    return String(row[name]).trim();
+                }
+                // Try case-insensitive match
+                for (const key in row) {
+                    if (key.toLowerCase() === name.toLowerCase() && String(row[key]).trim() !== '') {
+                        return String(row[key]).trim();
+                    }
+                }
+            }
+            return '';
+        }
+
+        // Import clients from Excel (purely in browser, no server)
+        importClientsInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+                    // Debug: Log all available column names
+                    if (json.length > 0) {
+                        console.log('Available columns in Excel:', Object.keys(json[0]));
+                    }
+
+                    const clients = json.map((row) => {
+                        const name = findField(row, [
+                            // Column letter from your sheet
+                            'B',
+                            // Common header variants
+                            'Main Client Name', 'Client Name', 'Customer Name', 'Name', 'Client', 'Company Name', 
+                            'Company', 'Customer', 'Client/Customer', 'name', 'client name', 'main client name'
+                        ]);
+                        const area = findField(row, [
+                            'Area', 'Region', 'Zone', 'Territory', 'Location', 'area', 'region'
+                        ]);
+                        const contact_person = findField(row, [
+                            'Contact Person', 'Contact', 'Contact Name', 'Person', 'Contact Person Name',
+                            'Primary Contact', 'Main Contact', 'contact_person', 'contact person', 'contact'
+                        ]);
+                        const email = findField(row, [
+                            // Column letter from your sheet
+                            'F',
+                            // Common header variants
+                            'Email', 'E-mail', 'Mail', 'Email Address', 'E-Mail', 'email', 'e-mail'
+                        ]);
+                        const phone = findField(row, [
+                            // Column letter from your sheet
+                            'E',
+                            // Common header variants
+                            'Phone', 'Mobile', 'Mobile Number', 'Contact Number', 'Phone Number', 'Phone number',
+                            'Tel', 'Telephone', 'Cell', 'Cell Phone', 'phone', 'mobile', 'contact number'
+                        ]);
+
+                        return {
+                            name: name,
+                            area: area,
+                            contact_person: contact_person,
+                            email: email,
+                            phone: phone
+                        };
+                    }).filter(c => c.name || c.area || c.contact_person || c.email || c.phone); // Filter out completely empty rows
+
+                    console.log('Parsed clients:', clients.slice(0, 3)); // Log first 3 for debugging
+
+                    // Merge imported clients into in-memory list
+                    window.CLIENTS = window.CLIENTS.concat(clients);
+                    allClients = window.CLIENTS.slice();
+                    renderClients(allClients);
+                    showToast(`Imported ${clients.length} clients`, 'success');
+                } catch (err) {
+                    console.error(err);
+                    showToast(err.message || 'Failed to import clients', 'error');
+                } finally {
+                    importClientsInput.value = '';
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        // Initial load
+        loadClients();
+
+        // ============ LOGIN PROTECTION ============
+        // Check if user is logged in
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Display logged-in username
+        const username = localStorage.getItem('username') || 'User';
+        const userElements = document.querySelectorAll('header .flex.items-center.space-x-2 span');
+        userElements.forEach(span => {
+            if (span.textContent.includes('Admin')) {
+                span.textContent = username.charAt(0).toUpperCase() + username.slice(1);
+            }
+        });
+
+        // Add logout functionality
+        const userProfile = document.querySelector('header img[alt="User profile picture"]');
+        if (userProfile) {
+            userProfile.style.cursor = 'pointer';
+            userProfile.parentElement.style.cursor = 'pointer';
+            userProfile.parentElement.addEventListener('click', function() {
+                if (confirm('Do you want to logout?')) {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('loginTime');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
