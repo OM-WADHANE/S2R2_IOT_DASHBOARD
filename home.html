@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2R2 - Smart IoT Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .scroll-container {
+            display: flex;
+            animation: scroll 30s linear infinite;
+        }
+        .scroll-container:hover {
+            animation-play-state: paused;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-microchip text-blue-600 text-2xl mr-2"></i>
+                    <span class="text-2xl font-bold text-gray-800">S2R2</span>
+                    <span class="ml-2 text-sm text-gray-500">IoT Solutions</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition">About</a>
+                    <a href="#products" class="text-gray-700 hover:text-blue-600 transition">Products</a>
+                    <a href="#clients" class="text-gray-700 hover:text-blue-600 transition">Clients</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
+                </div>
+                <a href="/login" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="gradient-bg hero-pattern text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">Smart IoT Solutions for Industry 4.0</h1>
+            <p class="text-xl md:text-2xl mb-8 text-gray-100">Transforming Manufacturing with Real-Time Monitoring & Automation</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/login" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    Get Started
+                </a>
+                <a href="#about" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">About S2R2</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    S2R2 is a leading provider of Industrial IoT solutions, specializing in real-time inventory management, 
+                    smart manufacturing, and automation systems for modern industries.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-6 rounded-xl bg-blue-50 hover:shadow-lg transition">
+                    <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Real-Time Monitoring</h3>
+                    <p class="text-gray-600">Track inventory, materials, and products in real-time with advanced IoT sensors</p>
+                </div>
+
+                <div class="text-center p-6 rounded-xl bg-purple-50 hover:shadow-lg transition">
+                    <div class="bg-purple-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-cogs text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Smart Automation</h3>
+                    <p class="text-gray-600">Automate processes and reduce manual intervention with intelligent systems</p>
+                </div>
+
+                <div class="text-center p-6 rounded-xl bg-green-50 hover:shadow-lg transition">
+                    <div class="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Secure & Reliable</h3>
+                    <p class="text-gray-600">Enterprise-grade security with 99.9% uptime guaranteed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Our Products</h2>
+                <p class="text-xl text-gray-600">Comprehensive IoT solutions for your business</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
+                    <div class="text-blue-600 text-4xl mb-4"><i class="fas fa-microchip"></i></div>
+                    <h3 class="text-xl font-bold mb-2">IoT Sensors</h3>
+                    <p class="text-gray-600 mb-4">Temperature, humidity, motion, and RFID sensors for comprehensive monitoring</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-check text-green-500 mr-2"></i>Real-time data<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Low power consumption<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Wireless connectivity
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
+                    <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-server"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Gateway Devices</h3>
+                    <p class="text-gray-600 mb-4">Edge computing gateways with multi-protocol support</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-check text-green-500 mr-2"></i>WiFi, Bluetooth, LoRa<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Edge processing<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Secure connectivity
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
+                    <div class="text-green-600 text-4xl mb-4"><i class="fas fa-desktop"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Management Platform</h3>
+                    <p class="text-gray-600 mb-4">Cloud-based dashboard for monitoring and analytics</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-check text-green-500 mr-2"></i>Real-time dashboards<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Advanced analytics<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Custom reports
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
+                    <div class="text-orange-600 text-4xl mb-4"><i class="fas fa-box"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Complete Solutions</h3>
+                    <p class="text-gray-600 mb-4">End-to-end integrated systems for your facility</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-check text-green-500 mr-2"></i>Full installation<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Training & support<br>
+                        <i class="fas fa-check text-green-500 mr-2"></i>Maintenance plans
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section with Scrolling Logos -->
+    <section id="clients" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Trusted by Industry Leaders</h2>
+                <p class="text-xl text-gray-600">Over 50+ companies trust S2R2 for their IoT solutions</p>
+            </div>
+
+            <div class="overflow-hidden">
+                <div class="scroll-container">
+                    <!-- First Set -->
+                    <div class="flex space-x-12 min-w-max px-6">
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-blue-700 font-bold text-xl">Tata Group</div>
+                            <div class="text-gray-500 text-sm mt-2">Manufacturing</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-red-700 font-bold text-xl">Cummins</div>
+                            <div class="text-gray-500 text-sm mt-2">Automotive</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-purple-700 font-bold text-xl">Hoerbiger</div>
+                            <div class="text-gray-500 text-sm mt-2">Industrial</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-green-700 font-bold text-xl">Kalyani</div>
+                            <div class="text-gray-500 text-sm mt-2">Forging</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-orange-700 font-bold text-xl">JBM Group</div>
+                            <div class="text-gray-500 text-sm mt-2">Automotive</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-indigo-700 font-bold text-xl">BRS Precision</div>
+                            <div class="text-gray-500 text-sm mt-2">Engineering</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-pink-700 font-bold text-xl">Antolin</div>
+                            <div class="text-gray-500 text-sm mt-2">Auto Parts</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-teal-700 font-bold text-xl">Cybernetik</div>
+                            <div class="text-gray-500 text-sm mt-2">Technology</div>
+                        </div>
+                    </div>
+                    <!-- Duplicate Set for Seamless Loop -->
+                    <div class="flex space-x-12 min-w-max px-6">
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-blue-700 font-bold text-xl">Tata Group</div>
+                            <div class="text-gray-500 text-sm mt-2">Manufacturing</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-red-700 font-bold text-xl">Cummins</div>
+                            <div class="text-gray-500 text-sm mt-2">Automotive</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-purple-700 font-bold text-xl">Hoerbiger</div>
+                            <div class="text-gray-500 text-sm mt-2">Industrial</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-green-700 font-bold text-xl">Kalyani</div>
+                            <div class="text-gray-500 text-sm mt-2">Forging</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-orange-700 font-bold text-xl">JBM Group</div>
+                            <div class="text-gray-500 text-sm mt-2">Automotive</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-indigo-700 font-bold text-xl">BRS Precision</div>
+                            <div class="text-gray-500 text-sm mt-2">Engineering</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-pink-700 font-bold text-xl">Antolin</div>
+                            <div class="text-gray-500 text-sm mt-2">Auto Parts</div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg w-48 h-32">
+                            <div class="text-teal-700 font-bold text-xl">Cybernetik</div>
+                            <div class="text-gray-500 text-sm mt-2">Technology</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-5xl font-bold mb-2">50+</div>
+                    <div class="text-xl text-gray-200">Happy Clients</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">10K+</div>
+                    <div class="text-xl text-gray-200">Devices Deployed</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">99.9%</div>
+                    <div class="text-xl text-gray-200">Uptime</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">24/7</div>
+                    <div class="text-xl text-gray-200">Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Get in Touch</h2>
+                <p class="text-xl text-gray-600">Ready to transform your business with IoT?</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-map-marker-alt text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Location</h3>
+                    <p class="text-gray-600">Pune, Maharashtra, India</p>
+                </div>
+                <div>
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-envelope text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Email</h3>
+                    <p class="text-gray-600">info@s2r2.com</p>
+                </div>
+                <div>
+                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-phone text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Phone</h3>
+                    <p class="text-gray-600">+91 XXX XXX XXXX</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-microchip text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">S2R2</span>
+                    </div>
+                    <p class="text-gray-400">Leading provider of Industrial IoT solutions for modern manufacturing.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#about" class="hover:text-white transition">About</a></li>
+                        <li><a href="#products" class="hover:text-white transition">Products</a></li>
+                        <li><a href="/login" class="hover:text-white transition">Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">Products</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">IoT Sensors</a></li>
+                        <li><a href="#" class="hover:text-white transition">Gateways</a></li>
+                        <li><a href="#" class="hover:text-white transition">Management Platform</a></li>
+                        <li><a href="#" class="hover:text-white transition">Solutions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">Connect</h3>
+                    <div class="flex space-x-4 text-2xl">
+                        <a href="#" class="text-gray-400 hover:text-blue-500 transition"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-red-500 transition"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 transition"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center text-gray-400">
+                <p>&copy; 2025 S2R2 IoT Solutions. All rights reserved.</p>
+                <p class="mt-2 text-sm">Designed & Developed by <span class="text-blue-400 font-semibold">Dorge Patil Group Teams</span></p>
+            </div>
+        </footer>
+    </footer>
+</body>
+</html>
